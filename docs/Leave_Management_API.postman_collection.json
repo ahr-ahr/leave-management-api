@@ -151,6 +151,71 @@
             "description": "# Google OAuth Redirect\n\nGenerate Google OAuth authentication redirect URL.\n\n---\n\n## Endpoint\n\n``` http\nGET /api/auth/google/redirect\n\n ```\n\n---\n\n## Headers\n\n| Key | Value |\n| --- | --- |\n| Accept | application/json |\n\n---\n\n## Success Response\n\n``` json\n{\n  \"success\": true,\n  \"message\": \"Success\",\n  \"data\": {\n    \"redirect_url\": \"https://accounts.google.com/o/oauth2/auth?...\"\n  }\n}\n\n ```\n\n---\n\n## OAuth Flow\n\n1. Send request to this endpoint.\n    \n2. Copy returned `redirect_url`.\n    \n3. Open the URL in browser.\n    \n4. Login using Google account.\n    \n5. Google redirects back to callback endpoint.\n    \n6. API returns authenticated user and Sanctum token.\n    \n\n---\n\n## Notes\n\n- OAuth authentication uses Laravel Socialite.\n    \n- If email already exists, the existing account will be linked with Google OAuth.\n    \n- OAuth users can authenticate using Google login flow."
           },
           "response": []
+        },
+        {
+          "name": "Google OAuth Callback",
+          "protocolProfileBehavior": {
+            "disabledSystemHeaders": {
+              "accept": true
+            }
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/google/callback?code",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "google",
+                "callback"
+              ],
+              "query": [
+                {
+                  "key": "code",
+                  "value": null,
+                  "description": "Google OAuth authorization code",
+                  "type": "text"
+                }
+              ]
+            },
+            "description": "# Google OAuth Callback\n\nHandle Google OAuth callback after successful authentication.\n\n---\n\n## Endpoint\n\n``` http\nGET /api/auth/google/callback\n\n ```\n\n---\n\n## Description\n\nThis endpoint is automatically called by Google after successful OAuth authentication.\n\nUsers should not manually access this endpoint without a valid OAuth authorization code.\n\n---\n\n## Query Parameters\n\n| Parameter | Description |\n| --- | --- |\n| code | Google OAuth authorization code |\n\n---\n\n## Success Response\n\n``` json\n{\n  \"success\": true,\n  \"message\": \"OAuth login successful.\",\n  \"data\": {\n    \"user\": {\n      \"id\": 1,\n      \"name\": \"User\",\n      \"email\": \"user@gmail.com\"\n    },\n    \"token\": \"sanctum-token\"\n  }\n}\n\n ```\n\n---\n\n## Notes\n\n- This endpoint is part of the Google OAuth flow.\n    \n- Automatically called by Google after user authentication.\n    \n- Accessing endpoint manually without `code` parameter will return OAuth error."
+          },
+          "response": []
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}/{{employee_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "description": "# Logout User\n\nLogout authenticated user and revoke current Sanctum token.\n\n---\n\n## Endpoint\n\n``` http\nPOST /api/auth/logout\n\n ```\n\n---\n\n## Headers\n\n| Key | Value |\n| --- | --- |\n| Accept | application/json |\n| Authorization | Bearer {token} |\n\n---\n\n## Authentication\n\nRequires authenticated user token.\n\n---\n\n## Success Response\n\n``` json\n{\n  \"success\": true,\n  \"message\": \"Logout successful.\"\n}\n\n ```\n\n---\n\n## Notes\n\n- Current access token will be revoked.\n    \n- User must login again to access protected endpoints.\n    \n- Works for both admin and employee accounts."
+          },
+          "response": []
         }
       ]
     },
