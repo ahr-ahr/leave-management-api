@@ -1,4 +1,3 @@
-````md
 # Leave Management API Architecture
 
 ## Overview
@@ -33,7 +32,6 @@ F --> G[(Database)]
 
 E --> H[Resource Layer]
 H --> I[JSON Response]
-```
 ````
 
 ---
