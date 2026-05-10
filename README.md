@@ -76,13 +76,11 @@ E --> H[Resource Layer]
 H --> I[JSON Response]
 ```
 
-````
-
-Detailed architecture documentation & erd:
+Detailed architecture documentation & ERD:
 
 - [Architecture Documentation](docs/architecture.md)
 - [ERD](docs/leave-management-erd.png)
-- [Laravel](docs/laravel.md)
+- [Laravel Notes](docs/laravel.md)
 
 ---
 
@@ -188,43 +186,11 @@ php artisan test --filter=LeaveServiceTest
 
 ---
 
-# API Endpoints
+# API Documentation
 
-## Authentication
+Postman Collection:
 
-| Method | Endpoint             | Description       |
-| ------ | -------------------- | ----------------- |
-| POST   | `/api/auth/register` | Register new user |
-| POST   | `/api/auth/login`    | Login user        |
-| POST   | `/api/auth/logout`   | Logout user       |
-
----
-
-## OAuth
-
-| Method | Endpoint                    | Description                   |
-| ------ | --------------------------- | ----------------------------- |
-| GET    | `/api/auth/google/redirect` | Get Google OAuth redirect URL |
-| GET    | `/api/auth/google/callback` | Google OAuth callback         |
-
----
-
-## Employee Routes
-
-| Method | Endpoint               | Description          |
-| ------ | ---------------------- | -------------------- |
-| GET    | `/api/employee/leaves` | Get leave history    |
-| POST   | `/api/employee/leaves` | Create leave request |
-
----
-
-## Admin Routes
-
-| Method | Endpoint                         | Description        |
-| ------ | -------------------------------- | ------------------ |
-| GET    | `/api/admin/leaves/pending`      | Get pending leaves |
-| PATCH  | `/api/admin/leaves/{id}/approve` | Approve leave      |
-| PATCH  | `/api/admin/leaves/{id}/reject`  | Reject leave       |
+- [Postman Collection](postman_collection.json)
 
 ---
 
@@ -264,22 +230,6 @@ password: password
 
 ---
 
-# Project Structure
-
-```text
-app/
-├── DTOs/
-├── Enums/
-├── Exceptions/
-├── Http/
-├── Models/
-├── Repositories/
-├── Services/
-└── Traits/
-```
-
----
-
 # Design Principles
 
 - Separation of Concerns
@@ -295,8 +245,3 @@ app/
 # License
 
 This project is for technical assessment and educational purposes.
-
-```
-
-```
-````
