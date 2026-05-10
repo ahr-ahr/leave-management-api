@@ -89,7 +89,7 @@ Detailed architecture documentation & ERD:
 ## Clone Repository
 
 ```bash
-git clone <repository-url>
+git clone [<repository-url>](https://github.com/ahr-ahr/leave-management-api)
 
 cd leave-management-api
 ```
@@ -190,7 +190,7 @@ php artisan test --filter=LeaveServiceTest
 
 Postman Collection:
 
-- [Postman Collection](postman_collection.json)
+- [Postman Collection](docs/Leave_Management_API.postman_collection.json)
 
 ---
 

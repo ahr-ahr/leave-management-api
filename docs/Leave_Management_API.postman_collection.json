@@ -1,0 +1,434 @@
+{
+  "info": {
+    "_postman_id": "0154fbcc-c593-4b7b-8d3b-a4c7aaba1953",
+    "name": "Leave Management API",
+    "description": "# Leave Management API\n\nRESTful Leave Management API built using Laravel 12.\n\n## Features\n\n- Sanctum Authentication\n    \n- Google OAuth Login\n    \n- Leave Request Management\n    \n- Leave Approval Workflow\n    \n- Role-Based Authorization\n    \n\n## Authentication\n\nProtected routes require:\n\n``` http\nAuthorization: Bearer {token}\n\n ```\n\n## Base URL\n\n``` txt\nhttp://localhost:8000\n\n ```\n\n## Roles\n\n### Admin\n\n- approve leave\n    \n- reject leave\n    \n- view pending leaves\n    \n\n### Employee\n\n- create leave request\n    \n- view leave history",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "51353655",
+    "_collection_link": "https://go.postman.co/collection/51353655-0154fbcc-c593-4b7b-8d3b-a4c7aaba1953?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "protocolProfileBehavior": {
+            "disabledSystemHeaders": {
+              "accept": true
+            }
+          },
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"name\": \"Employee\",\r\n  \"email\": \"employee@example.com\",\r\n  \"password\": \"password\",\r\n  \"password_confirmation\": \"password\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register"
+              ]
+            },
+            "description": "# Register User\n\nCreate a new employee account.\n\n---\n\n## Endpoint\n\n``` http\nPOST /api/auth/register\n\n ```\n\n---\n\n## Headers\n\n| Key | Value |\n| --- | --- |\n| Accept | application/json |\n\n---\n\n## Request Body\n\n``` json\n{\n  \"name\": \"Haikal\",\n  \"email\": \"haikal@example.com\",\n  \"password\": \"password\",\n  \"password_confirmation\": \"password\"\n}\n\n ```\n\n---\n\n## Validation Rules\n\n| Field | Rules |\n| --- | --- |\n| name | required, string |\n| email | required, unique |\n| password | required, confirmed |\n\n---\n\n## Success Response\n\n``` json\n{\n  \"success\": true,\n  \"message\": \"Register successful.\",\n  \"data\": {\n    \"user\": {\n      \"id\": 1,\n      \"name\": \"Haikal\",\n      \"email\": \"haikal@example.com\"\n    },\n    \"token\": \"sanctum-token\"\n  }\n}\n\n ```\n\n---\n\n## Notes\n\n- Newly registered users are assigned the `employee` role by default.\n    \n- Authentication uses Laravel Sanctum."
+          },
+          "response": []
+        },
+        {
+          "name": "Login Employee",
+          "protocolProfileBehavior": {
+            "disabledSystemHeaders": {
+              "accept": true
+            }
+          },
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"employee@example.com\",\r\n  \"password\": \"password\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            },
+            "description": "# Login Employee\n\nAuthenticate employee account and return Sanctum access token.\n\n---\n\n## Endpoint\n\n``` http\nPOST /api/auth/login\n\n ```\n\n---\n\n## Headers\n\n| Key | Value |\n| --- | --- |\n| Accept | application/json |\n\n---\n\n## Request Body\n\n``` json\n{\n  \"email\": \"employee@gmail.com\",\n  \"password\": \"password\"\n}\n\n ```\n\n---\n\n## Validation Rules\n\n| Field | Rules |\n| --- | --- |\n| email | required, email |\n| password | required |\n\n---\n\n## Success Response\n\n``` json\n{\n  \"success\": true,\n  \"message\": \"Login successful.\",\n  \"data\": {\n    \"user\": {\n      \"id\": 2,\n      \"name\": \"Employee\",\n      \"email\": \"employee@gmail.com\",\n      \"role\": \"employee\"\n    },\n    \"token\": \"sanctum-token\"\n  }\n}\n\n ```\n\n---\n\n## Notes\n\n- Copy returned token into Postman collection variable:\n    \n\n``` txt\nemployee_token\n\n ```\n\n- Use the token for all protected employee endpoints.\n    \n- Authentication uses Laravel Sanctum Bearer Token."
+          },
+          "response": []
+        },
+        {
+          "name": "Login Admin",
+          "protocolProfileBehavior": {
+            "disabledSystemHeaders": {
+              "user-agent": true
+            }
+          },
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"admin@example.com\",\r\n  \"password\": \"password\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "# Login Admin\n\nAuthenticate admin account and return Sanctum access token.\n\n---\n\n## Endpoint\n\n``` http\nPOST /api/auth/login\n\n ```\n\n---\n\n## Headers\n\n| Key | Value |\n| --- | --- |\n| Accept | application/json |\n\n---\n\n## Request Body\n\n``` json\n{\n  \"email\": \"admin@gmail.com\",\n  \"password\": \"password\"\n}\n\n ```\n\n---\n\n## Validation Rules\n\n| Field | Rules |\n| --- | --- |\n| email | required, email |\n| password | required |\n\n---\n\n## Success Response\n\n``` json\n{\n  \"success\": true,\n  \"message\": \"Login successful.\",\n  \"data\": {\n    \"user\": {\n      \"id\": 1,\n      \"name\": \"Admin\",\n      \"email\": \"admin@gmail.com\",\n      \"role\": \"admin\"\n    },\n    \"token\": \"sanctum-token\"\n  }\n}\n\n ```\n\n---\n\n## Notes\n\n- Copy returned token into Postman collection variable:\n    \n\n``` txt\nadmin_token\n\n ```\n\n- Use the token for all protected admin endpoints.\n    \n- Authentication uses Laravel Sanctum Bearer Token."
+          },
+          "response": []
+        },
+        {
+          "name": "Google OAuth Redirect",
+          "protocolProfileBehavior": {
+            "disabledSystemHeaders": {
+              "accept": true
+            }
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/google/redirect",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "google",
+                "redirect"
+              ]
+            },
+            "description": "# Google OAuth Redirect\n\nGenerate Google OAuth authentication redirect URL.\n\n---\n\n## Endpoint\n\n``` http\nGET /api/auth/google/redirect\n\n ```\n\n---\n\n## Headers\n\n| Key | Value |\n| --- | --- |\n| Accept | application/json |\n\n---\n\n## Success Response\n\n``` json\n{\n  \"success\": true,\n  \"message\": \"Success\",\n  \"data\": {\n    \"redirect_url\": \"https://accounts.google.com/o/oauth2/auth?...\"\n  }\n}\n\n ```\n\n---\n\n## OAuth Flow\n\n1. Send request to this endpoint.\n    \n2. Copy returned `redirect_url`.\n    \n3. Open the URL in browser.\n    \n4. Login using Google account.\n    \n5. Google redirects back to callback endpoint.\n    \n6. API returns authenticated user and Sanctum token.\n    \n\n---\n\n## Notes\n\n- OAuth authentication uses Laravel Socialite.\n    \n- If email already exists, the existing account will be linked with Google OAuth.\n    \n- OAuth users can authenticate using Google login flow."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Employee",
+      "item": [
+        {
+          "name": "Get Leaves",
+          "protocolProfileBehavior": {
+            "disabledSystemHeaders": {
+              "accept": true
+            }
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{employee_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/employee/leaves",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "employee",
+                "leaves"
+              ]
+            },
+            "description": "# Get Leave History\n\nRetrieve authenticated employee leave request history.\n\n---\n\n## Endpoint\n\n``` http\nGET /api/employee/leaves\n\n ```\n\n---\n\n## Headers\n\n| Key | Value |\n| --- | --- |\n| Accept | application/json |\n| Authorization | Bearer {employee_token} |\n\n---\n\n## Authentication\n\nRequires authenticated employee token.\n\n---\n\n## Success Response\n\n``` json\n{\n  \"success\": true,\n  \"data\": [\n    {\n      \"id\": 1,\n      \"start_date\": \"2026-05-10\",\n      \"end_date\": \"2026-05-12\",\n      \"days\": 3,\n      \"reason\": \"Family event\",\n      \"status\": \"pending\"\n    }\n  ]\n}\n\n ```\n\n---\n\n## Notes\n\n- Only authenticated employees can access this endpoint.\n    \n- Returns leave history ordered by latest request."
+          },
+          "response": []
+        },
+        {
+          "name": "Create Leave",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{employee_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "start_date",
+                  "value": "",
+                  "type": "text",
+                  "uuid": "f4319567-bb9e-40a8-a6dd-d164c8258cf8"
+                },
+                {
+                  "key": "end_date",
+                  "value": "",
+                  "type": "text",
+                  "uuid": "3389d8c4-d9e2-46a6-bb62-3fd665fd10b8"
+                },
+                {
+                  "key": "reason",
+                  "value": "",
+                  "type": "text",
+                  "uuid": "ef6bf747-f4b3-486c-8c9e-f58c551f8e36"
+                },
+                {
+                  "key": "attachment",
+                  "type": "file",
+                  "uuid": "b025a31b-0d74-4e14-bb19-34fed06f5971",
+                  "value": null
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/employee/leaves",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "employee",
+                "leaves"
+              ]
+            },
+            "description": "# Create Leave Request\n\nCreate a new leave request with attachment upload.\n\n---\n\n## Endpoint\n\n``` http\nPOST /api/employee/leaves\n\n ```\n\n---\n\n## Headers\n\n| Key | Value |\n| --- | --- |\n| Accept | application/json |\n| Authorization | Bearer {employee_token} |\n\n---\n\n## Authentication\n\nRequires authenticated employee token.\n\n---\n\n## Body Type\n\n``` txt\nform-data\n\n ```\n\n---\n\n## Request Body\n\n| Field | Type | Required |\n| --- | --- | --- |\n| start_date | text | yes |\n| end_date | text | yes |\n| reason | text | yes |\n| attachment | file | yes |\n\n---\n\n## Example Request\n\n| Key | Value |\n| --- | --- |\n| start_date | 2026-05-10 |\n| end_date | 2026-05-12 |\n| reason | Family event |\n| attachment | leave-document.pdf |\n\n---\n\n## Success Response\n\n``` json\n{\n  \"success\": true,\n  \"message\": \"Leave request created successfully.\"\n}\n\n ```\n\n---\n\n## Business Rules\n\n- Leave dates must not overlap existing leave requests.\n    \n- Annual leave quota is enforced.\n    \n- Attachment upload is required.\n    \n- Newly created leave status defaults to `pending`.\n    \n\n---\n\n## Notes\n\n- File upload uses multipart/form-data.\n    \n- Supported file types:\n    \n    - pdf\n        \n    - jpg\n        \n    - jpeg\n        \n    - png\n        \n    - doc\n        \n    - docx"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "Get Pending Leaves",
+          "protocolProfileBehavior": {
+            "disabledSystemHeaders": {
+              "accept": true
+            }
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/leaves/pending",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "leaves",
+                "pending"
+              ]
+            },
+            "description": "# Get Pending Leave Requests\n\nRetrieve all pending leave requests.\n\n---\n\n## Endpoint\n\n``` http\nGET /api/admin/leaves/pending\n\n ```\n\n---\n\n## Headers\n\n| Key | Value |\n| --- | --- |\n| Accept | application/json |\n| Authorization | Bearer {admin_token} |\n\n---\n\n## Authentication\n\nRequires authenticated admin token.\n\n---\n\n## Success Response\n\n``` json\n{\n  \"success\": true,\n  \"data\": [\n    {\n      \"id\": 1,\n      \"user\": {\n        \"id\": 2,\n        \"name\": \"Employee\"\n      },\n      \"start_date\": \"2026-05-10\",\n      \"end_date\": \"2026-05-12\",\n      \"days\": 3,\n      \"status\": \"pending\"\n    }\n  ]\n}\n\n ```\n\n---\n\n## Notes\n\n- Only admin users can access this endpoint.\n    \n- Returns only leave requests with `pending` status."
+          },
+          "response": []
+        },
+        {
+          "name": "Approve Leave",
+          "protocolProfileBehavior": {
+            "disabledSystemHeaders": {
+              "accept": true
+            }
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/leaves/1/approve",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "leaves",
+                "1",
+                "approve"
+              ]
+            },
+            "description": "# Approve Leave Request\n\nApprove a pending leave request.\n\n---\n\n## Endpoint\n\n``` http\nPATCH /api/admin/leaves/{id}/approve\n\n ```\n\n---\n\n## Headers\n\n| Key | Value |\n| --- | --- |\n| Accept | application/json |\n| Authorization | Bearer {admin_token} |\n\n---\n\n## Authentication\n\nRequires authenticated admin token.\n\n---\n\n## URL Parameters\n\n| Parameter | Description |\n| --- | --- |\n| id | Leave request ID |\n\n---\n\n## Success Response\n\n``` json\n{\n  \"success\": true,\n  \"message\": \"Leave approved successfully.\"\n}\n\n ```\n\n---\n\n## Business Rules\n\n- Only leave requests with `pending` status can be approved.\n    \n- Approved leave stores:\n    \n    - approver admin\n        \n    - approval timestamp\n        \n\n---\n\n## Notes\n\n- Only admin users can approve leave requests."
+          },
+          "response": []
+        },
+        {
+          "name": "Reject Leave",
+          "protocolProfileBehavior": {
+            "disabledSystemHeaders": {
+              "accept": true
+            }
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/leaves/1/reject",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "leaves",
+                "1",
+                "reject"
+              ]
+            },
+            "description": "# Reject Leave Request\n\nReject a pending leave request.\n\n---\n\n## Endpoint\n\n``` http\nPATCH /api/admin/leaves/{id}/reject\n\n ```\n\n---\n\n## Headers\n\n| Key | Value |\n| --- | --- |\n| Accept | application/json |\n| Authorization | Bearer {admin_token} |\n\n---\n\n## Authentication\n\nRequires authenticated admin token.\n\n---\n\n## URL Parameters\n\n| Parameter | Description |\n| --- | --- |\n| id | Leave request ID |\n\n---\n\n## Request Body\n\n``` json\n{\n  \"rejection_reason\": \"Insufficient team coverage\"\n}\n\n ```\n\n---\n\n## Validation Rules\n\n| Field | Rules |\n| --- | --- |\n| rejection_reason | required, string |\n\n---\n\n## Success Response\n\n``` json\n{\n  \"success\": true,\n  \"message\": \"Leave rejected successfully.\"\n}\n\n ```\n\n---\n\n## Business Rules\n\n- Only leave requests with `pending` status can be rejected.\n    \n- Rejection reason is required.\n    \n\n---\n\n## Notes\n\n- Only admin users can reject leave requests."
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": ""
+    },
+    {
+      "key": "admin_token",
+      "value": ""
+    },
+    {
+      "key": "employee_token",
+      "value": ""
+    }
+  ]
+}
