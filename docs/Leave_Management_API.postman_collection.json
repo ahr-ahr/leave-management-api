@@ -116,6 +116,17 @@
                 }
               }
             },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            },
             "description": "# Login Admin\n\nAuthenticate admin account and return Sanctum access token.\n\n---\n\n## Endpoint\n\n``` http\nPOST /api/auth/login\n\n ```\n\n---\n\n## Headers\n\n| Key | Value |\n| --- | --- |\n| Accept | application/json |\n\n---\n\n## Request Body\n\n``` json\n{\n  \"email\": \"admin@gmail.com\",\n  \"password\": \"password\"\n}\n\n ```\n\n---\n\n## Validation Rules\n\n| Field | Rules |\n| --- | --- |\n| email | required, email |\n| password | required |\n\n---\n\n## Success Response\n\n``` json\n{\n  \"success\": true,\n  \"message\": \"Login successful.\",\n  \"data\": {\n    \"user\": {\n      \"id\": 1,\n      \"name\": \"Admin\",\n      \"email\": \"admin@gmail.com\",\n      \"role\": \"admin\"\n    },\n    \"token\": \"sanctum-token\"\n  }\n}\n\n ```\n\n---\n\n## Notes\n\n- Copy returned token into Postman collection variable:\n    \n\n``` txt\nadmin_token\n\n ```\n\n- Use the token for all protected admin endpoints.\n    \n- Authentication uses Laravel Sanctum Bearer Token."
           },
           "response": []
@@ -200,12 +211,12 @@
               "bearer": [
                 {
                   "key": "token",
-                  "value": "{{admin_token}}/{{employee_token}}",
+                  "value": "{{admin_token}} / {{employee_token}}",
                   "type": "string"
                 }
               ]
             },
-            "method": "GET",
+            "method": "POST",
             "header": [
               {
                 "key": "Accept",
@@ -213,6 +224,17 @@
                 "type": "text"
               }
             ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/logout",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "logout"
+              ]
+            },
             "description": "# Logout User\n\nLogout authenticated user and revoke current Sanctum token.\n\n---\n\n## Endpoint\n\n``` http\nPOST /api/auth/logout\n\n ```\n\n---\n\n## Headers\n\n| Key | Value |\n| --- | --- |\n| Accept | application/json |\n| Authorization | Bearer {token} |\n\n---\n\n## Authentication\n\nRequires authenticated user token.\n\n---\n\n## Success Response\n\n``` json\n{\n  \"success\": true,\n  \"message\": \"Logout successful.\"\n}\n\n ```\n\n---\n\n## Notes\n\n- Current access token will be revoked.\n    \n- User must login again to access protected endpoints.\n    \n- Works for both admin and employee accounts."
           },
           "response": []
@@ -265,6 +287,11 @@
         },
         {
           "name": "Create Leave",
+          "protocolProfileBehavior": {
+            "disabledSystemHeaders": {
+              "user-agent": true
+            }
+          },
           "request": {
             "auth": {
               "type": "bearer",
@@ -277,25 +304,31 @@
               ]
             },
             "method": "POST",
-            "header": [],
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
             "body": {
               "mode": "formdata",
               "formdata": [
                 {
                   "key": "start_date",
-                  "value": "",
+                  "value": "2026-05-10",
                   "type": "text",
                   "uuid": "f4319567-bb9e-40a8-a6dd-d164c8258cf8"
                 },
                 {
                   "key": "end_date",
-                  "value": "",
+                  "value": "2026-05-12",
                   "type": "text",
                   "uuid": "3389d8c4-d9e2-46a6-bb62-3fd665fd10b8"
                 },
                 {
                   "key": "reason",
-                  "value": "",
+                  "value": "Family event",
                   "type": "text",
                   "uuid": "ef6bf747-f4b3-486c-8c9e-f58c551f8e36"
                 },
@@ -303,7 +336,7 @@
                   "key": "attachment",
                   "type": "file",
                   "uuid": "b025a31b-0d74-4e14-bb19-34fed06f5971",
-                  "value": null
+                  "src": "TWW653Q0M/Ahmad_Haikal_Rizal_CV.pdf"
                 }
               ]
             },
@@ -396,7 +429,7 @@
               }
             ],
             "url": {
-              "raw": "{{base_url}}/api/admin/leaves/1/approve",
+              "raw": "{{base_url}}/api/admin/leaves/{{id_leaves}}/approve",
               "host": [
                 "{{base_url}}"
               ],
@@ -404,7 +437,7 @@
                 "api",
                 "admin",
                 "leaves",
-                "1",
+                "{{id_leaves}}",
                 "approve"
               ]
             },
@@ -438,8 +471,17 @@
                 "type": "text"
               }
             ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"rejection_reason\": \"Ditolak\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
             "url": {
-              "raw": "{{base_url}}/api/admin/leaves/1/reject",
+              "raw": "{{base_url}}/api/admin/leaves/{{id_leaves}}/reject",
               "host": [
                 "{{base_url}}"
               ],
@@ -447,7 +489,7 @@
                 "api",
                 "admin",
                 "leaves",
-                "1",
+                "{{id_leaves}}",
                 "reject"
               ]
             },
@@ -493,6 +535,10 @@
     },
     {
       "key": "employee_token",
+      "value": ""
+    },
+    {
+      "key": "id_leaves",
       "value": ""
     }
   ]
