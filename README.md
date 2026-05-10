@@ -199,7 +199,7 @@ Postman Collection:
 ## Admin Account
 
 ```txt
-email: admin@gmail.com
+email: admin@example.com
 password: password
 ```
 
@@ -208,7 +208,12 @@ password: password
 ## Employee Account
 
 ```txt
-email: employee@gmail.com
+email: employee1@gmail.com
+password: password
+```
+
+```txt
+email: employee2@gmail.com
 password: password
 ```
 
